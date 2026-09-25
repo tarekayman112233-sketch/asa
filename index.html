@@ -2,49 +2,54 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- السطر السحري: إجبار المتصفح وكانفا على التعامل مع الصفحة كشاشة كمبيوتر 1080p -->
+    <meta name="viewport" content="width=1080">
     <title>دعوة كتب كتاب | خالد وياسمين</title>
     <style>
         body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #f5f5dc; 
+            margin: 0; padding: 0; width: 1080px; height: 100vh; overflow: hidden; background: #f5f5dc; 
         }
         
         /* شاشة البداية لتشغيل الصوت */
         #start { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            position: absolute; top: 0; left: 0; width: 1080px; height: 100vh; 
             background: #f5f5dc; display: flex; justify-content: center; align-items: center; 
             z-index: 10; cursor: pointer; 
         }
         
+        /* تكبير الزرار لأن الشاشة هيتم تصغيرها تلقائياً على الموبايل */
         #start button { 
-            padding: 15px 40px; font-size: 20px; font-family: Arial, sans-serif;
-            background: #d4af37; color: #fff; border: none; border-radius: 30px; 
-            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 40px 90px; font-size: 55px; font-weight: bold; font-family: Arial, sans-serif;
+            background: #d4af37; color: #fff; border: none; border-radius: 60px; 
+            cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
         
-        /* الغلاف اللي هيحتوي كانفا */
-        #canva-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            transform-origin: top left; /* مهم جداً عشان التصغير يبدأ من الزاوية صح */
+        /* حاوية كانفا */
+        .canva-container {
+            width: 1080px;
+            height: 100vh;
+            position: relative;
         }
         
-        #canva-wrapper iframe {
-            width: 100%;
-            height: 100%;
+        /* إخفاء شريط كانفا بزيادة الطول للأسفل */
+        .canva-container iframe {
+            width: 1080px !important;
+            height: calc(100vh + 150px) !important; 
+            margin-top: -20px;
             border: none;
+            position: absolute;
+            top: 0; left: 0;
         }
     </style>
 </head>
 <body>
     <!-- شاشة البداية -->
-    <div id="start" onclick="startInvitation()">
+    <div id="start" onclick="this.style.display='none'; document.getElementById('music').play()">
         <button>اضغط لفتح الدعوة</button>
     </div>
     
-    <!-- الحاوية اللي هنجبر كانفا تفتكرها شاشة كبيرة -->
-    <div id="canva-wrapper">
+    <div class="canva-container">
+        <!-- كود كانفا الخاص بك -->
         <iframe loading="lazy" 
             src="https://www.canva.com/design/DAHWOjn0Kh4/376KPZyaGjXg4zMsfuFB-w/view?embed" 
             allowfullscreen="allowfullscreen" 
@@ -56,38 +61,5 @@
     <audio id="music" loop>
         <source src="music.mp3" type="audio/mpeg">
     </audio>
-
-    <script>
-        function startInvitation() {
-            // إخفاء شاشة البداية وتشغيل الأغنية
-            document.getElementById('start').style.display = 'none';
-            document.getElementById('music').play();
-        }
-
-        // خدعة إجبار كانفا على عرض جودة عالية
-        function forceHighQuality() {
-            const wrapper = document.getElementById('canva-wrapper');
-            
-            // مقاسات الشاشة الحقيقية للموبايل
-            const screenWidth = window.innerWidth;
-            const screenHeight = window.innerHeight;
-            
-            // هنفهم كانفا إن عرض الشاشة 1200 بيكسل (عشان تبعت الصور الأصلية)
-            const fakeWidth = 1200; 
-            const fakeHeight = (screenHeight / screenWidth) * fakeWidth;
-            
-            // نطبق المقاسات الوهمية الكبيرة
-            wrapper.style.width = fakeWidth + 'px';
-            wrapper.style.height = (fakeHeight + 120) + 'px'; // زودنا 120 بيكسل عشان نزق شريط كانفا بره الشاشة تماماً
-            
-            // نصغر الحاوية بالـ CSS عشان تركب بالظبط على شاشة الموبايل
-            const scaleRatio = screenWidth / fakeWidth;
-            wrapper.style.transform = 'scale(' + scaleRatio + ')';
-        }
-
-        // تشغيل الجودة العالية أول ما الصفحة تفتح
-        window.addEventListener('resize', forceHighQuality);
-        forceHighQuality();
-    </script>
 </body>
 </html>
